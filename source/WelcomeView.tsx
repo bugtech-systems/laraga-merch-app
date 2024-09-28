@@ -2,13 +2,14 @@ import React, {useCallback, useState} from 'react';
 import Realm from 'realm';
 import {useApp} from '@realm/react';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import {StyleSheet, Text, View, Alert} from 'react-native';
+import {StyleSheet, Text, View, Alert, TextInput, TouchableOpacity, Image, ActivityIndicator} from 'react-native';
 import {Input, Button} from '@rneui/base';
-import {colors} from './Colors';
+import { COLORS, icons } from './constants';
 
 export function WelcomeView(): React.ReactElement {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   // state values for toggable visibility of features in the UI
   const [passwordHidden, setPasswordHidden] = useState(true);
@@ -24,12 +25,29 @@ export function WelcomeView(): React.ReactElement {
 
   // onPressSignIn() uses the emailPassword authentication provider to log in
   const onPressSignIn = useCallback(async () => {
+    setLoading(true);
+
     try {
-      await signIn();
+    const authenticate = await signIn();
+    return authenticate
     } catch (error: any) {
       Alert.alert(`Failed to sign in: ${error?.message}`);
     }
   }, [signIn]);
+  
+  const handleSignIn = useCallback(async () => {
+    await onPressSignIn()
+    .then(res => {
+      console.log(res, "Success")
+      return;
+    })
+    .catch(err => {
+      Alert.alert('Something went wrong.')
+      console.log(err, "Error")
+      return
+    })
+    setLoading(false)
+  }, [signIn])
 
   // onPressSignUp() registers the user and then calls signIn to log the user in
   const onPressSignUp = useCallback(async () => {
@@ -41,67 +59,73 @@ export function WelcomeView(): React.ReactElement {
     }
   }, [signIn, app, email, password]);
 
+  const LoadingIndicator = () => {
+    return (
+      <View style={styles.activityContainer}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  };
+  
+  
   return (
     <SafeAreaProvider>
-      <View style={styles.viewWrapper}>
-        <Text style={styles.title}>My Sync App</Text>
-        <Text style={styles.subtitle}>
-          Please log in or register with a Device Sync user account. This is
-          separate from your Atlas Cloud login.
-        </Text>
-        <Input
-          placeholder="email"
+      <View style={{...styles.viewWrapper}}>
+        
+        <View style={{  alignItems: 'center', flexDirection: 'column', justifyContent: 'space-evenly', width: '80%', borderWidth: 1, height: 330, borderRadius: 22, borderColor: COLORS.gray900}}>
+        <Text style={{...styles.title, color: 'rgb(8, 83, 136)', fontWeight: 'bold'}}>LARAGA MERCHANDISE</Text>
+        
+        <View style={{ height: 50, borderWidth: 1, borderColor: COLORS.gray900, borderRadius: 12, alignItems: 'flex-start', padding: 6, width: '80%'}}>
+        {/* <Input
           onChangeText={setEmail}
           autoCapitalize="none"
-        />
-        <Input
-          placeholder="password"
+          inputStyle={{ borderColor: 'white'}}
+          containerStyle={{ flex: 1, borderBottomColor: 'white'}}
+          /> */}
+          <TextInput 
+          placeholder="Email"
+          onChangeText={setEmail}
+          autoCapitalize="none"
+          style={{ color: COLORS.black900, width: '100%' }}
+          />
+
+        </View>
+        <View style={{ height: 50, borderWidth: 1, borderRadius: 12,  borderColor: COLORS.gray900, alignItems: 'flex-start', padding: 6, width: '80%'}}>
+
+        <TextInput 
+          placeholder="Password"
+          secureTextEntry={true}
           onChangeText={setPassword}
-          secureTextEntry={passwordHidden}
-          rightIcon={
-            <Button
-              title={passwordHidden ? 'Show' : 'Hide'}
-              onPress={() => {
-                setPasswordHidden(!passwordHidden);
-              }}
-            />
-          }
-        />
-        {isInSignUpMode ? (
-          <>
-            <Button
-              title="Create Account"
-              buttonStyle={styles.mainButton}
-              onPress={onPressSignUp}
-            />
-            <Button
-              title="Already have an account? Log In"
-              type="clear"
-              titleStyle={styles.secondaryButton}
-              onPress={() => setIsInSignUpMode(!isInSignUpMode)}
-            />
-          </>
-        ) : (
-          <>
-            <Button
-              title="Log In"
-              buttonStyle={styles.mainButton}
-              onPress={onPressSignIn}
-            />
-            <Button
-              title="Don't have an account? Create Account"
-              type="clear"
-              titleStyle={styles.secondaryButton}
-              onPress={() => setIsInSignUpMode(!isInSignUpMode)}
-            />
-          </>
-        )}
+          autoCapitalize="none"
+          style={{ color: COLORS.black900, width: '100%' }}
+          />
+              </View>
+              <TouchableOpacity onPress={handleSignIn} disabled={!email || !password ? true : false} style={{ alignItems: 'center',  borderRadius: 6, width: '80%', borderWidth: 1, opacity: loading ? .7 : 1, elevation: 8,  backgroundColor: !email || !password ? COLORS.gray800 : 'rgb(8, 83, 136)', borderColor: !email || !password ? COLORS.gray800 : 'rgb(8, 83, 136)', padding: 10, height: 50}}>
+                {
+                  loading && 
+                  (
+                    <View style={{ height: 50, position: 'absolute', alignItems: 'center', justifyContent: 'center'}}>
+                      {LoadingIndicator()}
+                    </View>
+                  )
+                }
+                <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 18, color: COLORS.white, letterSpacing: 8}}>
+                  LOGIN
+                </Text>
+              </TouchableOpacity>
+          </View>
       </View>
     </SafeAreaProvider>
   );
 }
 
 const styles = StyleSheet.create({
+  activityContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    padding: 10,
+  },
   viewWrapper: {
     flex: 1,
     alignItems: 'center',
@@ -118,9 +142,9 @@ const styles = StyleSheet.create({
   },
   mainButton: {
     width: 350,
-    backgroundColor: colors.primary,
+    backgroundColor: 'rgb(8, 83, 136)',
   },
   secondaryButton: {
-    color: colors.primary,
+    color: 'rgb(8, 83, 136)',
   },
 });
