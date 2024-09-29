@@ -1,7 +1,8 @@
 // DashboardCard.js
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import { COLORS } from '../../constants';
 
 const DashboardCard = ({ title, stats, onPress }) => {
   return (
@@ -10,7 +11,7 @@ const DashboardCard = ({ title, stats, onPress }) => {
         <Text style={styles.cardTitle}>{title}</Text>
         {onPress && (
           <TouchableOpacity onPress={onPress}>
-            <Icon name="plus-circle-outline" size={24} color="#000" />
+            <Icon name="add-circle-outline" size={24} color="#000" />
           </TouchableOpacity>
         )}
       </View>
@@ -35,6 +36,9 @@ const styles = StyleSheet.create({
     width: '100%',
     borderRadius: 10,
     marginVertical: 10,
+    borderWidth: 1,
+    borderColor: COLORS.white,
+    elevation: 10
   },
   cardHeader: {
     flexDirection: 'row',
@@ -43,23 +47,31 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 16,
+    color: COLORS.black,
     fontWeight: 'bold',
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 10,
+    borderTopWidth: 1,
   },
   statBox: {
     alignItems: 'center',
   },
   statText: {
     fontSize: 12,
-    color: '#888',
+    // color: '#888',
+    // borderWidth: 1,
+    // width: '30%'
+    color: COLORS.black,
+    
   },
   statValue: {
     fontSize: 16,
     fontWeight: 'bold',
+    color: COLORS.black,
+
   },
 });
 

@@ -5,11 +5,11 @@ import moment from 'moment';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-const CashTransaction = ({navigation}) => {
+const InventoryEntries = ({navigation}) => {
   const [show, setShow] = useState(false);
   const [date, setDate] = useState(new Date());
-  const [tabSelected, setTabSelected] = useState('');
-  const [total, setTotal] = useState(0);
+//   const [tabSelected, setTabSelected] = useState('');
+//   const [total, setTotal] = useState(0);
   const [isModalVisible, setModalVisible] = useState(false);
   const [filteredTransactions, setFilteredTransactions] = useState([]);
 
@@ -18,76 +18,20 @@ const CashTransaction = ({navigation}) => {
     setShow(true);
   };
 
-const cashTransactionsData = [
+const inventoryEntriesData = [
   {
     id: 0,
-    type: 'disbursement',
-    title: 'Salary Expense',
-    user: 'James',
-    amount: 500
+    title: 'Bad Order',
+    qty: 60,
+    type: 'cans',
+    amount: 3250
   },
   {
     id: 1,
-    type: 'disbursement',
-    title: 'Fuel Expense',
-    user: 'Pedro',
-    amount: 500
-  },
-  {
-    id: 2,
-    type: 'disbursement',
-    title: 'Salary Expense',
-    user: 'Juan',
-    amount: 500
-  },
-  {
-    id: 3,
-    type: 'disbursement',
-    title: 'Salary Expense',
-    user: 'Gina',
-    amount: 500
-  },
-  {
-    id: 4,
-    type: 'disbursement',
-    title: 'Salary Expense',
-    user: 'Mark',
-    amount: 500
-  },
-  {
-    id: 5,
-    type: 'disbursement',
-    title: 'Salary Expense',
-    user: 'Jeff',
-    amount: 500
-  },
-  {
-    id: 6,
-    type: 'disbursement',
-    title: 'Salary Expense',
-    user: 'Dennis',
-    amount: 500
-  },
-  {
-    id: 7,
-    type: 'collection',
-    title: 'Payment',
-    user: 'Mark',
-    amount: 1200
-  },
-  {
-    id: 8,
-    type: 'collection',
-    title: 'Payment',
-    user: 'John',
-    amount: 3500
-  },
-  {
-    id: 7,
-    type: 'collection',
-    title: 'Payment',
-    user: 'Raymund',
-    amount: 1700
+    title: 'Available Stocks',
+    type: 'cans',
+    qty: 50,
+    amount: 3250
   },
 ]
 
@@ -116,7 +60,7 @@ const cashTransactionsData = [
   }
   
   const handleSelectedTab = useCallback((selected) => {
-      const filterData = cashTransactionsData.filter(item => {
+      const filterData = inventoryEntriesData.filter(item => {
         return item.type === selected;
       })
       console.log(selected, "selected")
@@ -139,7 +83,7 @@ const cashTransactionsData = [
 
   function renderDatePicker() {
     return (
-        <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', width: '100%', padding: 12 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', width: '100%', padding: 10 }}>
             <TouchableOpacity
                 activeOpacity={.8}
                 onPress={showDatePicker}
@@ -180,14 +124,14 @@ const cashTransactionsData = [
           Type
         </Text>
         <Text style={{ width: '30%', fontSize: 16, textAlign: 'left'}}>
-          User
+          Qty
         </Text>
         <Text style={{ width: '30%', fontSize: 16, textAlign: 'right'}}>
           Amount
         </Text>
         </View>
         {
-          filteredTransactions.map(item => {
+          inventoryEntriesData.map(item => {
             let amountPerItem = item?.amount
             total += amountPerItem;
           return (
@@ -196,7 +140,7 @@ const cashTransactionsData = [
                 {item?.title}
               </Text>
               <Text style={{ width: '30%', color: COLORS.black, textAlign: 'left', fontSize: 18, fontWeight: '500'}}>
-                {item?.user}
+                {`${item?.qty + " " + item.type}`}
               </Text>
               <Text style={{ width: '30%', color: COLORS.black, textAlign: 'right', fontSize: 18, fontWeight: '500'}}>
                 {item?.amount?.toFixed(2)}
@@ -204,7 +148,7 @@ const cashTransactionsData = [
             </View>
           )})
         } 
-        <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'flex-end',}}>
+        {/* <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'flex-end',}}>
           <View style={{ flexDirection: 'row', width: '100%', alignItems: "center", justifyContent: 'space-between',}}>
         <Text style={{ fontWeight: 'bold', fontSize: 20, color: COLORS.black}}>
           Total
@@ -213,14 +157,14 @@ const cashTransactionsData = [
           {total?.toFixed(2)}
         </Text>
           </View>
-        </View>
+        </View> */}
       </View>
     )
 
   }
   
   useEffect(() => {
-    handleSelectedTab('disbursement')
+    // handleSelectedTab('disbursement')
   }, [])
   
   return (
@@ -229,13 +173,13 @@ const cashTransactionsData = [
         flex: 1,
         backgroundColor: COLORS.gray400,
         // alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
   
       }}>
       {/* <Text>CashTransaction</Text> */}
       <View style={styles.header}>
                 <Icon name="arrow-back" size={30} color="#000" />
-                <Text style={styles.headerText}>Cash Transaction</Text>
+                <Text style={styles.headerText}>Inventory Entries</Text>
                 <TouchableOpacity onPress={toggleModal}>
                     <Icon name="menu" size={30} color="#000" />
                 </TouchableOpacity>
@@ -271,7 +215,7 @@ const cashTransactionsData = [
                 </View>
             </TouchableWithoutFeedback>
             </Modal>
-      <View style={{ flex: 1, flexDirection: 'row', width: '100%', alignItems: 'center', justifyContent: 'center',}}>
+      {/* <View style={{ flex: 1, flexDirection: 'row', width: '100%', alignItems: 'center', justifyContent: 'center',}}>
         <TouchableOpacity 
           onPress={() => handleSelectedTab('disbursement')}
           style={{ width: '50%', alignItems: 'center', justifyContent: 'center', flexDirection: 'row' }}
@@ -298,13 +242,13 @@ const cashTransactionsData = [
             Collections
           </Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
       
     </SafeAreaView>
   )
 }
 
-export default CashTransaction
+export default InventoryEntries
 
 const styles = StyleSheet.create({
   container: {

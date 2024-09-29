@@ -5,91 +5,92 @@ import moment from 'moment';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-const CashTransaction = ({navigation}) => {
-  const [show, setShow] = useState(false);
+const PaymentVerification = ({navigation}) => {
+const [show, setShow] = useState(false);
   const [date, setDate] = useState(new Date());
-  const [tabSelected, setTabSelected] = useState('');
-  const [total, setTotal] = useState(0);
+//   const [tabSelected, setTabSelected] = useState('');
+//   const [total, setTotal] = useState(0);
   const [isModalVisible, setModalVisible] = useState(false);
   const [filteredTransactions, setFilteredTransactions] = useState([]);
+  const [selectedItems, setSelectedItems] = useState([]); // Stores selected items
 
   
   const showDatePicker = () => {
     setShow(true);
   };
 
-const cashTransactionsData = [
-  {
-    id: 0,
-    type: 'disbursement',
-    title: 'Salary Expense',
-    user: 'James',
-    amount: 500
-  },
-  {
-    id: 1,
-    type: 'disbursement',
-    title: 'Fuel Expense',
-    user: 'Pedro',
-    amount: 500
-  },
-  {
-    id: 2,
-    type: 'disbursement',
-    title: 'Salary Expense',
-    user: 'Juan',
-    amount: 500
-  },
-  {
-    id: 3,
-    type: 'disbursement',
-    title: 'Salary Expense',
-    user: 'Gina',
-    amount: 500
-  },
-  {
-    id: 4,
-    type: 'disbursement',
-    title: 'Salary Expense',
-    user: 'Mark',
-    amount: 500
-  },
-  {
-    id: 5,
-    type: 'disbursement',
-    title: 'Salary Expense',
-    user: 'Jeff',
-    amount: 500
-  },
-  {
-    id: 6,
-    type: 'disbursement',
-    title: 'Salary Expense',
-    user: 'Dennis',
-    amount: 500
-  },
-  {
-    id: 7,
-    type: 'collection',
-    title: 'Payment',
-    user: 'Mark',
-    amount: 1200
-  },
-  {
-    id: 8,
-    type: 'collection',
-    title: 'Payment',
-    user: 'John',
-    amount: 3500
-  },
-  {
-    id: 7,
-    type: 'collection',
-    title: 'Payment',
-    user: 'Raymund',
-    amount: 1700
-  },
-]
+  const paymentVerificationData = [
+    {
+      id: 0,
+      type: 'disbursement',
+      title: 'Salary Expense',
+      user: 'James',
+      amount: 500
+    },
+    {
+      id: 1,
+      type: 'disbursement',
+      title: 'Fuel Expense',
+      user: 'Pedro',
+      amount: 500
+    },
+    {
+      id: 2,
+      type: 'disbursement',
+      title: 'Salary Expense',
+      user: 'Juan',
+      amount: 500
+    },
+    {
+      id: 3,
+      type: 'disbursement',
+      title: 'Salary Expense',
+      user: 'Gina',
+      amount: 500
+    },
+    {
+      id: 4,
+      type: 'disbursement',
+      title: 'Salary Expense',
+      user: 'Mark',
+      amount: 500
+    },
+    {
+      id: 5,
+      type: 'disbursement',
+      title: 'Salary Expense',
+      user: 'Jeff',
+      amount: 500
+    },
+    {
+      id: 6,
+      type: 'disbursement',
+      title: 'Salary Expense',
+      user: 'Dennis',
+      amount: 500
+    },
+    {
+      id: 7,
+      type: 'collection',
+      title: 'Payment',
+      user: 'Mark',
+      amount: 1200
+    },
+    {
+      id: 8,
+      type: 'collection',
+      title: 'Payment',
+      user: 'John',
+      amount: 3500
+    },
+    {
+      id: 7,
+      type: 'collection',
+      title: 'Payment',
+      user: 'Raymund',
+      amount: 1700
+    },
+  ]
 
 
   const menuItems = [
@@ -101,6 +102,25 @@ const cashTransactionsData = [
       { id: 6, title: 'Users' },
       { id: 7, title: 'Logout' },
   ];
+  // Toggle select/unselect all
+  const toggleSelectAll = () => {
+    if (selectedItems.length === paymentVerificationData.length) {
+      // If all items are selected, unselect all
+      setSelectedItems([]);
+    } else {
+      // Otherwise, select all items
+      setSelectedItems(paymentVerificationData.map(item => item.id));
+    }
+  };
+
+  // Toggle single item selection
+  const toggleItemSelection = (id) => {
+    if (selectedItems.includes(id)) {
+      setSelectedItems(prev => prev.filter(itemId => itemId !== id));
+    } else {
+      setSelectedItems(prev => [...prev, id]);
+    }
+  };
 
   const toggleModal = () => {
       console.log('TAPPED OUTSIDE')
@@ -116,7 +136,7 @@ const cashTransactionsData = [
   }
   
   const handleSelectedTab = useCallback((selected) => {
-      const filterData = cashTransactionsData.filter(item => {
+      const filterData = inventoryEntriesData.filter(item => {
         return item.type === selected;
       })
       console.log(selected, "selected")
@@ -139,7 +159,7 @@ const cashTransactionsData = [
 
   function renderDatePicker() {
     return (
-        <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', width: '100%', padding: 12 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', width: '100%', padding: 10 }}>
             <TouchableOpacity
                 activeOpacity={.8}
                 onPress={showDatePicker}
@@ -168,59 +188,64 @@ const cashTransactionsData = [
 }
   
   
-  function renderSelectedTabItems() {
-    let total = 0
-    return (
-      <View style={{ height: '70%', alignSelf: 'center', width: '90%', padding: 10, borderWidth: 1.5, borderColor: COLORS.gray100, borderRadius: 8, backgroundColor: COLORS.gray200, elevation: 8, }}>
-        <TouchableOpacity>
-        <Icon name="close" size={24} color="#000" style={{ alignSelf: 'flex-end'}} />
-        </TouchableOpacity>
-        <View style={{ width: '100%', flexDirection: 'row', padding: 10}}>
-        <Text style={{ width: '40%', fontSize: 16, textAlign: 'left'}}>
-          Type
+function renderForVerificationList() {
+  let total = 0
+  return (
+    <View style={{ height: '70%', alignSelf: 'center', width: '90%', padding: 10, borderWidth: 1.5, borderColor: COLORS.gray100, borderRadius: 8, backgroundColor: COLORS.gray200, elevation: 8, }}>
+      <View style={{flexDirection: 'row', }}>
+      <TouchableOpacity onPress={toggleSelectAll} style={{ flexDirection: "row", width: '100%', alignItems: 'center', justifyContent: 'flex-end',}}>
+        <Text 
+        style={{ textAlign: 'right', width: '40%'}}
+        >
+          {selectedItems.length === paymentVerificationData.length ? 'Unselect All' : 'Select All'}
         </Text>
-        <Text style={{ width: '30%', fontSize: 16, textAlign: 'left'}}>
-          User
-        </Text>
-        <Text style={{ width: '30%', fontSize: 16, textAlign: 'right'}}>
-          Amount
-        </Text>
-        </View>
-        {
-          filteredTransactions.map(item => {
-            let amountPerItem = item?.amount
-            total += amountPerItem;
-          return (
-            <View style={{ flexDirection: 'row',  width: '100%', padding: 10}}>
-              <Text style={{ width: '40%', color: COLORS.black, fontSize: 18, fontWeight: '500'}}>
-                {item?.title}
-              </Text>
-              <Text style={{ width: '30%', color: COLORS.black, textAlign: 'left', fontSize: 18, fontWeight: '500'}}>
-                {item?.user}
-              </Text>
-              <Text style={{ width: '30%', color: COLORS.black, textAlign: 'right', fontSize: 18, fontWeight: '500'}}>
-                {item?.amount?.toFixed(2)}
-              </Text>
-            </View>
-          )})
-        } 
-        <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'flex-end',}}>
-          <View style={{ flexDirection: 'row', width: '100%', alignItems: "center", justifyContent: 'space-between',}}>
-        <Text style={{ fontWeight: 'bold', fontSize: 20, color: COLORS.black}}>
-          Total
-        </Text>
-        <Text style={{ fontWeight: 'bold', fontSize: 20, color: COLORS.black}}>
-          {total?.toFixed(2)}
-        </Text>
-          </View>
+      <Icon name={selectedItems.length === paymentVerificationData.length ? 'check-box' : 'check-box-outline-blank'} size={24} color="#000" style={{ alignSelf: 'flex-end'}} />
+      </TouchableOpacity>
+      </View>
+      <View style={{ width: '100%', flexDirection: 'row', padding: 10}}>
+      <Text style={{ width: '40%', fontSize: 16, textAlign: 'left'}}>
+        Type
+      </Text>
+      <Text style={{ width: '25%', fontSize: 16, textAlign: 'left'}}>
+        User
+      </Text>
+      <Text style={{ width: '25%', fontSize: 16, textAlign: 'right'}}>
+        Amount
+      </Text>
+      </View>
+      {
+        paymentVerificationData.map(item => {
+          let amountPerItem = item?.amount
+          total += amountPerItem;
+        return (
+          <TouchableOpacity onPress={() => toggleItemSelection(item.id)}  style={{ flexDirection: 'row',  width: '100%', padding: 10}}>
+            <Text style={{ width: '40%', color: COLORS.black, fontSize: 18, fontWeight: '500'}}>
+              {item?.title}
+            </Text>
+            <Text style={{ width: '25%', color: COLORS.black, textAlign: 'left', fontSize: 18, fontWeight: '500'}}>
+              {item?.user}
+            </Text>
+            <Text style={{ width: '25%', color: COLORS.black, textAlign: 'right', fontSize: 18, fontWeight: '500'}}>
+              {item?.amount?.toFixed(2)}
+            </Text>
+            <Icon name={selectedItems.includes(item.id) ? 'check-box' : 'check-box-outline-blank'} size={24} color="#000" style={{ left: 10, width: '10%', alignSelf: 'flex-end'}} />
+          </TouchableOpacity>
+        )})
+      } 
+      <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'flex-end'}}>
+        <View style={{ flexDirection: 'row', width: '100%', alignItems: "center", justifyContent: 'center', borderWidth: 1, borderColor: COLORS.orange, backgroundColor: COLORS.orange, padding: 6, borderRadius: 12 }}>
+          <Text style={{ fontSize: 18, fontWeight: 'bold', color: COLORS.white, paddingHorizontal: 10, textAlign: 'center'}}>
+            CONFIRM RECEIVED & SET AS PAID
+          </Text>
         </View>
       </View>
-    )
+    </View>
+  )
 
-  }
+}
   
   useEffect(() => {
-    handleSelectedTab('disbursement')
+    // handleSelectedTab('disbursement')
   }, [])
   
   return (
@@ -229,13 +254,13 @@ const cashTransactionsData = [
         flex: 1,
         backgroundColor: COLORS.gray400,
         // alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
   
       }}>
       {/* <Text>CashTransaction</Text> */}
       <View style={styles.header}>
                 <Icon name="arrow-back" size={30} color="#000" />
-                <Text style={styles.headerText}>Cash Transaction</Text>
+                <Text style={styles.headerText}>Payments for Verification</Text>
                 <TouchableOpacity onPress={toggleModal}>
                     <Icon name="menu" size={30} color="#000" />
                 </TouchableOpacity>
@@ -251,7 +276,7 @@ const cashTransactionsData = [
                     onChange={onChange}
                 />
             )}
-      {renderSelectedTabItems()}
+      {renderForVerificationList()}
       <Modal
                 animationType="fade"
                 transparent={true}
@@ -271,7 +296,7 @@ const cashTransactionsData = [
                 </View>
             </TouchableWithoutFeedback>
             </Modal>
-      <View style={{ flex: 1, flexDirection: 'row', width: '100%', alignItems: 'center', justifyContent: 'center',}}>
+      {/* <View style={{ flex: 1, flexDirection: 'row', width: '100%', alignItems: 'center', justifyContent: 'center',}}>
         <TouchableOpacity 
           onPress={() => handleSelectedTab('disbursement')}
           style={{ width: '50%', alignItems: 'center', justifyContent: 'center', flexDirection: 'row' }}
@@ -298,13 +323,13 @@ const cashTransactionsData = [
             Collections
           </Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
       
     </SafeAreaView>
   )
 }
 
-export default CashTransaction
+export default PaymentVerification
 
 const styles = StyleSheet.create({
   container: {

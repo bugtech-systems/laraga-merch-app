@@ -14,6 +14,8 @@ import { COLORS, icons } from './constants';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Image } from 'react-native';
 import Dashboard from './screens/Dashboard';
+import InventoryEntries from './screens/InventoryEntries';
+import PaymentVerification from './screens/PaymentVerification';
 
 
 // If you're getting this app code by cloning the repository at
@@ -46,9 +48,9 @@ const LoadingIndicator = () => {
 const customDrawerIcon = () => {
   
   return (
-    <View style={{ paddingHorizontal: 12 }}>
+    <TouchableOpacity style={{ paddingHorizontal: 12 }}>
       <Image source={icons.drawer} resizeMode='contain' style={{height: 20, width: 20,}}/>
-    </View>
+    </TouchableOpacity>
   )
 }
 
@@ -79,6 +81,7 @@ export const App = () => {
               name="Dashboard"
               component={Dashboard}
 				options={({ navigation }) => ({
+          headerShown: false,
 					title: 'Dashboard',
 					headerTitleAlign: 'center',
 					headerTitleStyle: { color: COLORS.black, fontWeight: 'bold' },
@@ -105,7 +108,60 @@ export const App = () => {
               name="Cash Transaction"
               component={CashTransaction}
 				options={({ navigation }) => ({
+          headerShown: false,
 					title: 'Cash Transaction',
+					headerTitleStyle: { color: COLORS.black, fontWeight: 'bold' },
+					// headerStyle: { backgroundColor: COLORS.secondary },
+					headerStyle: { backgroundColor: '#fffff1', elevation: 6, borderBottomWidth: 1, shadowOpacity: .5, shadowColor: COLORS.black },
+
+					headerLeft: () => (
+						<TouchableOpacity
+							onPress={() => navigation.goBack()}
+							style={{ padding: 10, alignItems: 'center', justifyContent: 'center' }}
+						>
+							<Image
+								source={icons.back}
+								style={{
+									height: 20,
+									width: 20,
+									tintColor: COLORS.black
+								}} />
+						</TouchableOpacity>),
+						headerRight: () => (customDrawerIcon())
+				})}
+            />
+            <Stack.Screen
+              name="Inventory Entries"
+              component={InventoryEntries}
+				options={({ navigation }) => ({
+          headerShown: false,
+					title: 'Inventory Entries',
+					headerTitleStyle: { color: COLORS.black, fontWeight: 'bold' },
+					// headerStyle: { backgroundColor: COLORS.secondary },
+					headerStyle: { backgroundColor: '#fffff1', elevation: 6, borderBottomWidth: 1, shadowOpacity: .5, shadowColor: COLORS.black },
+
+					headerLeft: () => (
+						<TouchableOpacity
+							onPress={() => navigation.goBack()}
+							style={{ padding: 10, alignItems: 'center', justifyContent: 'center' }}
+						>
+							<Image
+								source={icons.back}
+								style={{
+									height: 20,
+									width: 20,
+									tintColor: COLORS.black
+								}} />
+						</TouchableOpacity>),
+						headerRight: () => (customDrawerIcon())
+				})}
+            />
+             <Stack.Screen
+              name="Payments Verification"
+              component={PaymentVerification}
+				options={({ navigation }) => ({
+          headerShown: false,
+					title: 'Inventory Entries',
 					headerTitleStyle: { color: COLORS.black, fontWeight: 'bold' },
 					// headerStyle: { backgroundColor: COLORS.secondary },
 					headerStyle: { backgroundColor: '#fffff1', elevation: 6, borderBottomWidth: 1, shadowOpacity: .5, shadowColor: COLORS.black },

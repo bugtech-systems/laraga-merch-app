@@ -6,7 +6,7 @@ export const COLORS = {
   primary: '#1699F2', // orange
   secondary: '#003580', // gray
   warning: '#ffe79a',
-  orange: '#a04d1d',
+  orange: '#c57648',
   danger: '#DC4C64',
   red: '#FF1717',
   transparentRed: '#ff17177c',
