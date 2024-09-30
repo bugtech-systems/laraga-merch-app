@@ -233,11 +233,11 @@ function renderForVerificationList() {
         )})
       } 
       <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'flex-end'}}>
-        <View style={{ flexDirection: 'row', width: '100%', alignItems: "center", justifyContent: 'center', borderWidth: 1, borderColor: COLORS.orange, backgroundColor: COLORS.orange, padding: 6, borderRadius: 12 }}>
+        <TouchableOpacity style={{ flexDirection: 'row', width: '100%', alignItems: "center", justifyContent: 'center', borderWidth: 1, borderColor: COLORS.orange, backgroundColor: 'rgb(224, 126, 11)', padding: 6, borderRadius: 12 }}>
           <Text style={{ fontSize: 18, fontWeight: 'bold', color: COLORS.white, paddingHorizontal: 10, textAlign: 'center'}}>
             CONFIRM RECEIVED & SET AS PAID
           </Text>
-        </View>
+        </TouchableOpacity>
       </View>
     </View>
   )
@@ -259,7 +259,9 @@ function renderForVerificationList() {
       }}>
       {/* <Text>CashTransaction</Text> */}
       <View style={styles.header}>
+      <TouchableOpacity onPress={() => navigation.goBack()}>
                 <Icon name="arrow-back" size={30} color="#000" />
+      </TouchableOpacity>
                 <Text style={styles.headerText}>Payments for Verification</Text>
                 <TouchableOpacity onPress={toggleModal}>
                     <Icon name="menu" size={30} color="#000" />

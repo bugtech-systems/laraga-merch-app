@@ -178,7 +178,9 @@ const inventoryEntriesData = [
       }}>
       {/* <Text>CashTransaction</Text> */}
       <View style={styles.header}>
+      <TouchableOpacity onPress={() => navigation.goBack()}>
                 <Icon name="arrow-back" size={30} color="#000" />
+      </TouchableOpacity>
                 <Text style={styles.headerText}>Inventory Entries</Text>
                 <TouchableOpacity onPress={toggleModal}>
                     <Icon name="menu" size={30} color="#000" />
