@@ -47,7 +47,7 @@ export function WelcomeView(): React.ReactElement {
       return
     })
     setLoading(false)
-  }, [signIn])
+  }, [])
 
   // onPressSignUp() registers the user and then calls signIn to log the user in
   const onPressSignUp = useCallback(async () => {

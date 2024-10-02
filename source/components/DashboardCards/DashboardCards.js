@@ -4,12 +4,12 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { COLORS } from '../../constants';
 
-const DashboardCard = ({ title, stats, onPress }) => {
+const DashboardCard = ({ title, stats, onPress, onPressCard }) => {
   return (
-    <View style={styles.card}>
+    <TouchableOpacity onPress={() => onPressCard()} style={styles.card}>
       <View style={styles.cardHeader}>
         <Text style={styles.cardTitle}>{title}</Text>
-        {onPress && (
+        {(title === 'CASH' && onPress) && (
           <TouchableOpacity onPress={onPress}>
             <Icon name="add-circle-outline" size={24} color="#000" />
           </TouchableOpacity>
@@ -25,7 +25,7 @@ const DashboardCard = ({ title, stats, onPress }) => {
           </View>
         ))}
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

@@ -1,18 +1,24 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image, Platform, SafeAreaView, Modal, FlatList, TouchableWithoutFeedback, } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import { COLORS, icons } from '../constants';
 import DashboardCard from '../components/DashboardCards/DashboardCards';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-
-
 const Dashboard = ({navigation}) => {
     const [show, setShow] = useState(false);
     const [date, setDate] = useState(new Date());
+    
+    const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
+  const data = [{ id: 0, title: "Disbursement",}, { id: 1, title: "Collection"}];
+
+  
+    const [isCashModalVisible, setCashModalVisible] = useState(false);
     const [isModalVisible, setModalVisible] = useState(false);
+    const [transaction, setTransaction] = useState('');
 
     const menuItems = [
         { id: 1, title: 'Dashboard' },
@@ -23,10 +29,31 @@ const Dashboard = ({navigation}) => {
         { id: 6, title: 'Users' },
         { id: 7, title: 'Logout' },
     ];
+    
+    
+      // Function to handle dropdown open/close
+  const toggleDropdown = () => {
+    setDropdownOpen(!isDropdownOpen);
+  };
+
+  // Function to handle closing dropdown when pressing outside
+  const closeDropdown = () => {
+    setDropdownOpen(false);
+  };
+  
+  const handleTransaction = (val) => {
+    setTransaction(val)
+    closeDropdown()
+  }
 
     const toggleModal = () => {
         console.log('TAPPED OUTSIDE')
         setModalVisible(!isModalVisible);
+    };
+    
+    const toggleCashModal = () => {
+        console.log('TAPPED OUTSIDE')
+        setCashModalVisible(!isCashModalVisible);
     };
 
     const handleSelectMenu = async (name) => {
@@ -47,6 +74,10 @@ const Dashboard = ({navigation}) => {
         setShow(true);
     };
 
+    const toggleSave = () => {
+        toggleCashModal()
+        setTransaction('')
+    }
 
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
@@ -123,6 +154,97 @@ const Dashboard = ({navigation}) => {
                 </View>
             </TouchableWithoutFeedback>
             </Modal>
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={isCashModalVisible}
+                onRequestClose={toggleCashModal}
+            >
+            {/* <TouchableWithoutFeedback onPress={() => setCashModalVisible(false)}>             */}
+                <View style={styles.modalOverlay}>
+                    <View style={{ ...styles.modalCashContent, alignSelf: 'flex-end' }}>
+                        <Icon onPress={toggleCashModal} name="close" size={25} style={{ alignSelf: 'flex-end'}}/>
+                        <View style={{ flexDirection: 'column', width: "100%", padding: 10}}>
+                            <Text style={{ fontSize: 18, color: COLORS.black}}>
+                                Transaction:
+                            </Text>
+                            <TouchableOpacity onPress={toggleDropdown} style={{ borderWidth: 1, height: 40, borderRadius: 12}}>
+                                <Text style={{ fontSize: 18, color: COLORS.black, textAlign: 'left', padding: 6}}>
+                                    {transaction !== '' ? transaction : null}
+                                </Text>
+                            </TouchableOpacity>
+                                
+                            {
+                                isDropdownOpen ? 
+                                <FlatList 
+                                    data={data}
+                                    renderItem={({item}) => 
+                                        <TouchableOpacity onPress={() => handleTransaction(item.title)} style={{  padding: 8, backgroundColor: COLORS.white, width: "100%", borderWidth: .5}}>
+                                            <Text style={{ fontSize: 16, color: COLORS.black, padding: 4}}>
+                                                {item.title}
+                                            </Text>
+                                        </TouchableOpacity>
+                                    }                            
+                                    keyExtractor={item => item.id}
+                                    style={{
+                                        position: 'absolute',
+                                    marginBottom: 5,
+                                    width: '100%',
+                                    left: 10,
+                                    zIndex: 2,
+                                    top: 70,
+                                        maxHeight: 200, // Limits the dropdown height
+                                        // backgroundColor: COLORS.transparent,
+                                        // borderWidth: 1,
+                                        borderColor: '#ccc',
+                                        borderRadius: 22, }}
+                                />
+                                :
+                                null
+                            }
+                                
+                           
+                            <Text style={{ fontSize: 18, color: COLORS.black, marginTop: 10}}>
+                                Description:
+                            </Text>
+                            <TouchableOpacity style={{ borderWidth: 1, height: 40, borderRadius: 12}}>
+                                
+                            </TouchableOpacity>
+                            
+                            <Text style={{ fontSize: 18, color: COLORS.black, marginTop: 10}}>
+                                Amount:
+                            </Text>
+                            <TouchableOpacity style={{ borderWidth: 1, height: 40, borderRadius: 12}}>
+                                
+                            </TouchableOpacity>
+                            
+                            <Text style={{ fontSize: 18, color: COLORS.black, marginTop: 10}}>
+                                Attachment:
+                            </Text>
+                            <TouchableOpacity style={{ borderWidth: 1, height: 40, borderRadius: 12}}>
+                                
+                            </TouchableOpacity>
+                            
+                            <Text style={{ fontSize: 18, color: COLORS.black, marginTop: 10}}>
+                                Payor / Payee:
+                            </Text>
+                            <TouchableOpacity style={{ borderWidth: 1, height: 40, borderRadius: 12}}>
+                                
+                            </TouchableOpacity>
+                        </View>
+                        {/* <Text style={styles.versionText}>v1.03.14.24.02</Text> */}
+                        <View style={{ height: '50%', alignItems: 'center', justifyContent: 'flex-end'}}>
+                            <TouchableOpacity onPress={toggleSave} style={{ borderWidth: 1, borderColor: COLORS.primary, backgroundColor: COLORS.primary, borderRadius: 8, marginBottom: 20, width: '80%', alignItems: 'center'}}>
+                            <Text style={{ padding: 10, color: COLORS.white, fontWeight: 'bold', fontSize: 16}}>
+                                SAVE
+                            </Text>
+                            </TouchableOpacity>
+                        </View>
+                        
+                    </View>
+                </View>
+            {/* </TouchableWithoutFeedback> */}
+            </Modal>
 
 
             {renderDatePicker()}
@@ -145,7 +267,8 @@ const Dashboard = ({navigation}) => {
                         { label: 'A/R', value: '3,000.00' },
                         { label: 'ON-HAND', value: '7,000.00' },
                     ]}
-                    onPress={() => console.log('Add Cash')}
+                    onPress={() => setCashModalVisible(true)}
+                    onPressCard={() => navigation.navigate('Cash Transaction')}
                 />
 
                 {/* Sales Card */}
@@ -155,6 +278,9 @@ const Dashboard = ({navigation}) => {
                         { label: 'NEW', value: '6,500.00' },
                         { label: 'REFILL', value: '4,400.00' },
                     ]}
+                    onPress={() => navigation.navigate('Sales')}
+                    onPressCard={() => navigation.navigate('Sales')}
+
                 />
 
                 {/* Inventory Card */}
@@ -166,6 +292,7 @@ const Dashboard = ({navigation}) => {
                         { label: 'B.O.', value: '50' },
                         { label: 'STOCKS', value: '150' },
                     ]}
+                    onPressCard={() => navigation.navigate('Inventory')}
                 />
 
                 {/* Purchases Card */}
@@ -177,6 +304,7 @@ const Dashboard = ({navigation}) => {
                         { label: 'TOTAL', value: '5,000.00' },
                         { label: 'AVE. AGE', value: '4' },
                     ]}
+                    onPressCard={() => navigation.navigate('Purchase')}
                 />
             </View>
         </SafeAreaView>
@@ -218,6 +346,16 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    modalCashContent: {
+        width: '100%',
+        backgroundColor: '#FFF',
+        borderRadius: 10,
+        padding: 10,
+        height: '90%',
+        // left: 30
+        // bottom: '20%'
+        // alignItems: 'center',
     },
     modalContent: {
         width: '50%',

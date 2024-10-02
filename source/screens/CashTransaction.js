@@ -220,7 +220,7 @@ const cashTransactionsData = [
   }
   
   useEffect(() => {
-    handleSelectedTab('disbursement')
+    handleSelectedTab('disbursement')  
   }, [])
   
   return (
@@ -234,7 +234,7 @@ const cashTransactionsData = [
       }}>
       {/* <Text>CashTransaction</Text> */}
       <View style={styles.header}>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
+      <TouchableOpacity onPress={() =>       navigation.goBack()}>
                 <Icon name="arrow-back" size={30} color="#000" />
       </TouchableOpacity>
                 <Text style={styles.headerText}>Cash Transaction</Text>
