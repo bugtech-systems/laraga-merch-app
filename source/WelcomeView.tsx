@@ -28,8 +28,7 @@ export function WelcomeView(): React.ReactElement {
     setLoading(true);
 
     try {
-    const authenticate = await signIn();
-    return authenticate
+      await signIn();
     } catch (error: any) {
       Alert.alert(`Failed to sign in: ${error?.message}`);
     }
@@ -100,7 +99,7 @@ export function WelcomeView(): React.ReactElement {
           style={{ color: COLORS.black900, width: '100%' }}
           />
               </View>
-              <TouchableOpacity onPress={handleSignIn} disabled={!email || !password ? true : false} style={{ alignItems: 'center',  borderRadius: 6, width: '80%', borderWidth: 1, opacity: loading ? .7 : 1, elevation: 8,  backgroundColor: !email || !password ? COLORS.gray800 : 'rgb(8, 83, 136)', borderColor: !email || !password ? COLORS.gray800 : 'rgb(8, 83, 136)', padding: 10, height: 50}}>
+              <TouchableOpacity onPress={onPressSignIn} disabled={!email || !password ? true : false} style={{ alignItems: 'center',  borderRadius: 6, width: '80%', borderWidth: 1, opacity: loading ? .7 : 1, elevation: 8,  backgroundColor: !email || !password ? COLORS.gray800 : 'rgb(8, 83, 136)', borderColor: !email || !password ? COLORS.gray800 : 'rgb(8, 83, 136)', padding: 10, height: 50}}>
                 {
                   loading && 
                   (
