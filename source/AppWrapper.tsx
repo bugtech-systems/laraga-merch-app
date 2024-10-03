@@ -6,7 +6,7 @@ import {appId, baseUrl} from '../atlasConfig.json';
 import {App} from './App';
 import {WelcomeView} from './WelcomeView';
 
-import {Item} from './ItemSchema';
+import {Item} from './Schema';
 
 const LoadingIndicator = () => {
   return (

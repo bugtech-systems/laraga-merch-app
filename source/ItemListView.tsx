@@ -8,7 +8,7 @@ import {dataExplorerLink} from '../atlasConfig.json';
 
 import {CreateToDoPrompt} from './CreateToDoPrompt';
 
-import {Item} from './ItemSchema';
+import {Item} from './Schema';
 import {colors} from './Colors';
 
 // If you're getting this app code by cloning the repository at

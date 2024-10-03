@@ -133,7 +133,6 @@ const Dashboard = ({navigation}) => {
                     <Icon name="menu" size={30} color="#000" />
                 </TouchableOpacity>
             </View>
-
             <Modal
                 animationType="fade"
                 transparent={true}
