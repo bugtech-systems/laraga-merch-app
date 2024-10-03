@@ -1,359 +1,257 @@
-import React from 'react';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
-import {StyleSheet, Linking, Text, View, ActivityIndicator} from 'react-native';
-import {NavigationContainer, createNavigationContainerRef} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-
-import {dataExplorerLink} from '../atlasConfig.json';
-import {LogoutButton} from './LogoutButton';
-import {ItemListView} from './ItemListView';
-import {OfflineModeButton} from './OfflineModeButton';
-import { WelcomeView } from './WelcomeView';
-import CashTransaction from './screens/CashTransaction';
+import React, { useState, useCallback } from 'react';
+import { useUser } from '@realm/react';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { StyleSheet, Text, View, ActivityIndicator, Modal, TouchableWithoutFeedback, FlatList, TouchableOpacity, Image } from 'react-native';
+import { NavigationContainer, createNavigationContainerRef } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import { COLORS, icons } from './constants';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { Image } from 'react-native';
 import Dashboard from './screens/Dashboard';
-import PaymentVerification from './screens/PaymentVerification';
-import Sales from './screens/Sales';
+import CashTransaction from './screens/CashTransaction';
 import Inventory from './screens/Inventory';
 import Purchase from './screens/Purchase';
-import SalesEntry from './screens/SalesEntry';
-import InventoryEntry from './screens/InventoryEntry';
 import UserForm from './screens/UserForm';
+import Sales from './screens/Sales';
+import InventoryEntry from './screens/InventoryEntry';
+import SalesEntry from './screens/SalesEntry';
+import { LogoutButton } from './LogoutButton';
+import { OfflineModeButton } from './OfflineModeButton';
 
-
-// If you're getting this app code by cloning the repository at
-// https://github.com/mongodb/ template-app-react-native-todo,
-// it does not contain the data explorer link. Download the
-// app template from the Atlas UI to view a link to your data
-const dataExplorerMessage = `View your data in MongoDB Atlas: ${dataExplorerLink}.`;
-
-console.log(dataExplorerMessage);
-
+const menuItems = [
+	{ id: 1, title: 'Dashboard', screen: 'Dashboard' },
+	{ id: 2, title: 'Cash Transaction', screen: 'Cash Transaction' },
+	{ id: 3, title: 'Inventory', screen: 'Inventory' },
+	{ id: 4, title: 'Purchases', screen: 'Purchases' },
+	{ id: 5, title: 'User Form', screen: 'User Form' },
+	{ id: 6, title: 'Logout', screen: 'Logout' },
+];
 
 const Stack = createStackNavigator();
 
-const headerRight = () => {
-  return <OfflineModeButton />;
-};
-
 const headerLeft = () => {
-  return <LogoutButton />;
+	return <LogoutButton />;
 };
-
-const LoadingIndicator = () => {
-  return (
-    <View style={styles.activityContainer}>
-      <ActivityIndicator size="large" />
-    </View>
-  );
-};
-
-const customDrawerIcon = () => {
-  
-  return (
-    <TouchableOpacity style={{ paddingHorizontal: 12 }}>
-      <Image source={icons.drawer} resizeMode='contain' style={{height: 20, width: 20,}}/>
-    </TouchableOpacity>
-  )
-}
-
-const realmFileBehavior = {
-  type: 'downloadBeforeOpen',
-  timeOut: 5000,
-  timeOutBehavior: 'openLocalRealm',
-}
-
 
 export const navigationRef = createNavigationContainerRef();
 
-
 export function navigate(name, params) {
-  navigationRef.current?.navigate(name, params);
+	navigationRef.current?.navigate(name, params);
 }
 
 export const App = () => {
-  return (
-    <>
-      {/* All screens nested in RealmProvider have access
-            to the configured realm's hooks. */}
+	const user = useUser();
+	const [isModalVisible, setModalVisible] = useState(false);
 
-<SafeAreaProvider>
-        <NavigationContainer>
-          <Stack.Navigator initialRouteName='Dashboard'> 
-          <Stack.Screen
-              name="Dashboard"
-              component={Dashboard}
-				options={({ navigation }) => ({
-          headerShown: false,
-					title: 'Dashboard',
-					headerTitleAlign: 'center',
-					headerTitleStyle: { color: COLORS.black, fontWeight: 'bold' },
-					// headerStyle: { backgroundColor: COLORS.secondary },
-					headerStyle: { backgroundColor: '#fffff1', elevation: 6, borderBottomWidth: 1, shadowOpacity: .5, shadowColor: COLORS.black },
+	const signOut = useCallback(() => {
+		user?.logOut();
+	}, [user]);
 
-					headerLeft: () => (
-						<TouchableOpacity
-							// onPress={() => navigation.goBack()}
-							style={{ padding: 10, alignItems: 'center', justifyContent: 'center' }}
-						>
-							<Image
-								source={icons.POS}
-								style={{
-									height: 30,
-									width: 30,
-									tintColor: COLORS.black,
-								}} />
-						</TouchableOpacity>),
-						headerRight: () => (customDrawerIcon())
-				})}
-            />
-          <Stack.Screen
-              name="Cash Transaction"
-              component={CashTransaction}
-				options={({ navigation }) => ({
-          headerShown: false,
-					title: 'Cash Transaction',
-					headerTitleStyle: { color: COLORS.black, fontWeight: 'bold' },
-					// headerStyle: { backgroundColor: COLORS.secondary },
-					headerStyle: { backgroundColor: '#fffff1', elevation: 6, borderBottomWidth: 1, shadowOpacity: .5, shadowColor: COLORS.black },
+	const toggleModal = () => {
+		setModalVisible(!isModalVisible);
+	};
 
-					headerLeft: () => (
-						<TouchableOpacity
-							onPress={() => navigation.goBack()}
-							style={{ padding: 10, alignItems: 'center', justifyContent: 'center' }}
-						>
-							<Image
-								source={icons.back}
-								style={{
-									height: 20,
-									width: 20,
-									tintColor: COLORS.black
-								}} />
-						</TouchableOpacity>),
-						headerRight: () => (customDrawerIcon())
-				})}
-            />
-            <Stack.Screen
-              name="Inventory Entry"
-              component={InventoryEntry}
-				options={({ navigation }) => ({
-          headerShown: false,
-					title: 'Inventory Entry',
-					headerTitleStyle: { color: COLORS.black, fontWeight: 'bold' },
-					// headerStyle: { backgroundColor: COLORS.secondary },
-					headerStyle: { backgroundColor: '#fffff1', elevation: 6, borderBottomWidth: 1, shadowOpacity: .5, shadowColor: COLORS.black },
+	const handleSelectMenu = async (screen) => {
+		toggleModal();
+		if (screen !== 'Logout') {
+			navigate(screen);
+		} else {
+			signOut()
+			// Handle logout functionality if needed
+		}
+	};
 
-					headerLeft: () => (
-						<TouchableOpacity
-							onPress={() => navigation.goBack()}
-							style={{ padding: 10, alignItems: 'center', justifyContent: 'center' }}
-						>
-							<Image
-								source={icons.back}
-								style={{
-									height: 20,
-									width: 20,
-									tintColor: COLORS.black
-								}} />
-						</TouchableOpacity>),
-						headerRight: () => (customDrawerIcon())
-				})}
-            />
-            <Stack.Screen
-              name="User Form"
-              component={UserForm}
-				options={({ navigation }) => ({
-          headerShown: false,
-					title: 'User Form',
-					headerTitleStyle: { color: COLORS.black, fontWeight: 'bold' },
-					// headerStyle: { backgroundColor: COLORS.secondary },
-					headerStyle: { backgroundColor: '#fffff1', elevation: 6, borderBottomWidth: 1, shadowOpacity: .5, shadowColor: COLORS.black },
+	const renderMenuItem = ({ item }) => (
+		<TouchableOpacity onPress={() => handleSelectMenu(item.screen)} style={styles.menuItem}>
+			<Text style={styles.menuItemText}>{item.title}</Text>
+		</TouchableOpacity>
+	);
 
-					headerLeft: () => (
-						<TouchableOpacity
-							onPress={() => navigation.goBack()}
-							style={{ padding: 10, alignItems: 'center', justifyContent: 'center' }}
-						>
-							<Image
-								source={icons.back}
-								style={{
-									height: 20,
-									width: 20,
-									tintColor: COLORS.black
-								}} />
-						</TouchableOpacity>),
-						headerRight: () => (customDrawerIcon())
-				})}
-            />
-            <Stack.Screen
-              name="Sales"
-              component={Sales}
-				options={({ navigation }) => ({
-          headerShown: false,
-					title: 'Sales',
-					headerTitleStyle: { color: COLORS.black, fontWeight: 'bold' },
-					// headerStyle: { backgroundColor: COLORS.secondary },
-					headerStyle: { backgroundColor: '#fffff1', elevation: 6, borderBottomWidth: 1, shadowOpacity: .5, shadowColor: COLORS.black },
+	const customDrawerIcon = () => (
+		<View>
+			<TouchableOpacity onPress={toggleModal} style={{ paddingHorizontal: 12 }}>
+				<Image source={icons.drawer} resizeMode='contain' style={{ height: 20, width: 20 }} />
+			</TouchableOpacity>
+			<Modal
+				animationType="fade"
+				transparent={true}
+				visible={isModalVisible}
+				onRequestClose={toggleModal}
+			>
+				<TouchableWithoutFeedback onPress={toggleModal}>
+					<View style={styles.modalOverlay}>
+						<View style={{ ...styles.modalContent, alignSelf: 'flex-end' }}>
+							<FlatList
+								data={menuItems}
+								renderItem={renderMenuItem}
+								keyExtractor={item => item.id.toString()}
+							/>
+							<Text style={styles.versionText}>v1.03.14.24.02</Text>
+						</View>
+					</View>
+				</TouchableWithoutFeedback>
+			</Modal>
+		</View>
+	);
 
-					headerLeft: () => (
-						<TouchableOpacity
-							onPress={() => navigation.goBack()}
-							style={{ padding: 10, alignItems: 'center', justifyContent: 'center' }}
-						>
-							<Image
-								source={icons.back}
-								style={{
-									height: 20,
-									width: 20,
-									tintColor: COLORS.black
-								}} />
-						</TouchableOpacity>),
-						headerRight: () => (customDrawerIcon())
-				})}
-            />
-                        <Stack.Screen
-              name="Inventory"
-              component={Inventory}
-				options={({ navigation }) => ({
-          headerShown: false,
-					title: 'Inventory',
-					headerTitleStyle: { color: COLORS.black, fontWeight: 'bold' },
-					// headerStyle: { backgroundColor: COLORS.secondary },
-					headerStyle: { backgroundColor: '#fffff1', elevation: 6, borderBottomWidth: 1, shadowOpacity: .5, shadowColor: COLORS.black },
+	return (
+		<SafeAreaProvider>
+			<NavigationContainer ref={navigationRef}>
+				<Stack.Navigator initialRouteName='Dashboard'>
+					<Stack.Screen
+						name="Dashboard"
+						component={Dashboard}
+						options={{
+							title: 'Dashboard',
+							headerTitleAlign: 'center',
+							headerTitleStyle: { color: COLORS.black, fontWeight: 'bold' },
+							// headerStyle: { backgroundColor: COLORS.secondary },
+							headerStyle: { backgroundColor: '#fffff6', elevation: 6, borderBottomWidth: 1, shadowOpacity: .5, shadowColor: COLORS.black },
 
-					headerLeft: () => (
-						<TouchableOpacity
-							onPress={() => navigation.goBack()}
-							style={{ padding: 10, alignItems: 'center', justifyContent: 'center' }}
-						>
-							<Image
-								source={icons.back}
-								style={{
-									height: 20,
-									width: 20,
-									tintColor: COLORS.black
-								}} />
-						</TouchableOpacity>),
-						headerRight: () => (customDrawerIcon())
-				})}
-            />
-                        <Stack.Screen
-              name="Purchases"
-              component={Purchase}
-				options={({ navigation }) => ({
-          headerShown: false,
-					title: 'Purchases',
-					headerTitleStyle: { color: COLORS.black, fontWeight: 'bold' },
-					// headerStyle: { backgroundColor: COLORS.secondary },
-					headerStyle: { backgroundColor: '#fffff1', elevation: 6, borderBottomWidth: 1, shadowOpacity: .5, shadowColor: COLORS.black },
+							headerRight: customDrawerIcon,
+							headerLeft: () => (
+								<TouchableOpacity
+									// onPress={() => navigation.goBack()}
+									style={{ padding: 10, alignItems: 'center', justifyContent: 'center' }}
+								>
+									<Image
+										source={icons.POS}
+										style={{
+											height: 30,
+											width: 30,
+											tintColor: COLORS.black,
+										}} />
+								</TouchableOpacity>),
+						}}
+					/>
+					<Stack.Screen
+						name="Cash Transaction"
+						component={CashTransaction}
+						options={{
+							title: 'Cash Transaction',
+							headerTitleAlign: 'center',
+							headerTitleStyle: { color: COLORS.black, fontWeight: 'bold' },
+							// headerStyle: { backgroundColor: COLORS.secondary },
+							headerStyle: { backgroundColor: '#fffff6', elevation: 6, borderBottomWidth: 1, shadowOpacity: .5, shadowColor: COLORS.black },
+							headerRight: customDrawerIcon,
+						}}
+					/>
+					<Stack.Screen
+						name="Inventory"
+						component={Inventory}
+						options={{
+							title: 'Inventory',
+							headerTitleAlign: 'center',
+							headerTitleStyle: { color: COLORS.black, fontWeight: 'bold' },
+							// headerStyle: { backgroundColor: COLORS.secondary },
+							headerStyle: { backgroundColor: '#fffff6', elevation: 6, borderBottomWidth: 1, shadowOpacity: .5, shadowColor: COLORS.black },
 
-					headerLeft: () => (
-						<TouchableOpacity
-							onPress={() => navigation.goBack()}
-							style={{ padding: 10, alignItems: 'center', justifyContent: 'center' }}
-						>
-							<Image
-								source={icons.back}
-								style={{
-									height: 20,
-									width: 20,
-									tintColor: COLORS.black
-								}} />
-						</TouchableOpacity>),
-						headerRight: () => (customDrawerIcon())
-				})}
-            />
-            <Stack.Screen
-              name="Sales Entry"
-              component={SalesEntry}
-				options={({ navigation }) => ({
-          headerShown: false,
-					title: 'Sales Entry',
-					headerTitleStyle: { color: COLORS.black, fontWeight: 'bold' },
-					// headerStyle: { backgroundColor: COLORS.secondary },
-					headerStyle: { backgroundColor: '#fffff1', elevation: 6, borderBottomWidth: 1, shadowOpacity: .5, shadowColor: COLORS.black },
+							headerRight: customDrawerIcon,
+						}}
+					/>
+					<Stack.Screen
+						name="Purchases"
+						component={Purchase}
+						options={{
+							title: 'Purchases',
+							headerTitleAlign: 'center',
+							headerTitleStyle: { color: COLORS.black, fontWeight: 'bold' },
+							// headerStyle: { backgroundColor: COLORS.secondary },
+							headerStyle: { backgroundColor: '#fffff6', elevation: 6, borderBottomWidth: 1, shadowOpacity: .5, shadowColor: COLORS.black },
 
-					headerLeft: () => (
-						<TouchableOpacity
-							onPress={() => navigation.goBack()}
-							style={{ padding: 10, alignItems: 'center', justifyContent: 'center' }}
-						>
-							<Image
-								source={icons.back}
-								style={{
-									height: 20,
-									width: 20,
-									tintColor: COLORS.black
-								}} />
-						</TouchableOpacity>),
-						headerRight: () => (customDrawerIcon())
-				})}
-            />
-            
-            <Stack.Screen
-              name="Your To-Do List"
-              component={ItemListView}
-              options={{
-                headerTitleAlign: 'center',
-                headerLeft,
-                headerRight,
-              }}
-            />
-            <Stack.Screen
-              name="Login"
-              component={WelcomeView}
-              options={{
-                headerTitleAlign: 'center',
-                headerLeft,
-                headerRight,
-              }}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
+							headerRight: customDrawerIcon,
+						}}
+					/>
+					<Stack.Screen
+						name="User Form"
+						component={UserForm}
+						options={{
+							title: 'User Form',
+							headerTitleAlign: 'center',
+							headerTitleStyle: { color: COLORS.black, fontWeight: 'bold' },
+							// headerStyle: { backgroundColor: COLORS.secondary },
+							headerStyle: { backgroundColor: '#fffff6', elevation: 6, borderBottomWidth: 1, shadowOpacity: .5, shadowColor: COLORS.black },
 
-        {/* <View style={styles.footer}>
-          <Text style={styles.footerText}>
-            Log in with the same account on another device or simulator to see
-            your list sync in real time.
-          </Text>
+							headerRight: customDrawerIcon,
+						}}
+					/>
+					<Stack.Screen
+						name="Sales"
+						component={Sales}
+						options={{
+							title: 'Sales',
+							headerTitleAlign: 'center',
+							headerTitleStyle: { color: COLORS.black, fontWeight: 'bold' },
+							// headerStyle: { backgroundColor: COLORS.secondary },
+							headerStyle: { backgroundColor: '#fffff6', elevation: 6, borderBottomWidth: 1, shadowOpacity: .5, shadowColor: COLORS.black },
 
-          {dataExplorerLink && (
-            <View>
-              <Text style={styles.footerText}>
-                You can view your data in MongoDB Atlas:
-              </Text>
-              <Text
-                style={[styles.footerText, styles.hyperlink]}
-                onPress={() => Linking.openURL(dataExplorerLink)}>
-                {dataExplorerLink}.
-              </Text>
-            </View>
-          )}
-        </View> */}
-      </SafeAreaProvider>
-    </>
-  );
+							headerRight: customDrawerIcon,
+						}}
+					/>
+					<Stack.Screen
+						name="Inventory Entry"
+						component={InventoryEntry}
+						options={{
+							title: 'Inventory Entry',
+							headerTitleAlign: 'center',
+							headerTitleStyle: { color: COLORS.black, fontWeight: 'bold' },
+							// headerStyle: { backgroundColor: COLORS.secondary },
+							headerStyle: { backgroundColor: '#fffff6', elevation: 6, borderBottomWidth: 1, shadowOpacity: .5, shadowColor: COLORS.black },
+
+							headerRight: customDrawerIcon,
+						}}
+					/>
+					<Stack.Screen
+						name="Sales Entry"
+						component={SalesEntry}
+						options={{
+							title: 'Sales Entry',
+							headerTitleAlign: 'center',
+							headerTitleStyle: { color: COLORS.black, fontWeight: 'bold' },
+							// headerStyle: { backgroundColor: COLORS.secondary },
+							headerStyle: { backgroundColor: '#fffff6', elevation: 6, borderBottomWidth: 1, shadowOpacity: .5, shadowColor: COLORS.black },
+
+							headerRight: customDrawerIcon,
+						}}
+					/>
+				</Stack.Navigator>
+			</NavigationContainer>
+		</SafeAreaProvider>
+	);
 };
 
 const styles = StyleSheet.create({
-  activityContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    padding: 10,
-  },
-  footerText: {
-    fontSize: 12,
-    textAlign: 'center',
-    marginVertical: 4,
-  },
-  hyperlink: {
-    color: 'blue',
-  },
-  footer: {
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-  },
+	modalOverlay: {
+		flex: 1,
+		backgroundColor: 'rgba(0, 0, 0, 0.5)',
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	modalContent: {
+		width: '50%',
+		backgroundColor: '#FFF',
+		borderRadius: 10,
+		padding: 10,
+		height: '50%',
+		// left: 30
+		bottom: '20%'
+		// alignItems: 'center',
+	},
+	menuItem: {
+		paddingVertical: 15,
+		borderBottomColor: '#ddd',
+		borderBottomWidth: 1,
+		textAlign: 'left',
+		alignItems: 'flex-start',
+		width: '100%',
+	},
+	menuItemText: {
+		fontSize: 16,
+		fontWeight: 'bold',
+		color: '#000',
+		textAlign: 'center',
+	},
+	versionText: {
+		marginTop: 10,
+		color: '#888',
+		fontSize: 12,
+	},
 });

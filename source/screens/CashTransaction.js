@@ -10,7 +10,6 @@ const CashTransaction = ({navigation}) => {
   const [date, setDate] = useState(new Date());
   const [tabSelected, setTabSelected] = useState('');
   const [total, setTotal] = useState(0);
-  const [isModalVisible, setModalVisible] = useState(false);
   const [filteredTransactions, setFilteredTransactions] = useState([]);
 
   
@@ -92,27 +91,7 @@ const cashTransactionsData = [
 ]
 
 
-const menuItems = [
-  { id: 1, title: 'Dashboard' },
-  { id: 2, title: 'Cash Transaction' },
-  { id: 3, title: 'Inventory' },
-  { id: 4, title: 'Purchases' },
-  { id: 5, title: 'Users' },
-  { id: 6, title: 'Logout' },
-];
 
-  const toggleModal = () => {
-      console.log('TAPPED OUTSIDE')
-      setModalVisible(!isModalVisible);
-  };
-
-  const handleSelectMenu = async (name) => {
-      toggleModal()
-      navigation.navigate(name, {})
-      console.log(name, "NAME")
-
-      return
-  }
   
   const handleSelectedTab = useCallback((selected) => {
       const filterData = cashTransactionsData.filter(item => {
@@ -130,15 +109,9 @@ const menuItems = [
       setDate(currentDate);
   };
 
-  const renderMenuItem = ({ item }) => (
-    <TouchableOpacity onPress={() => handleSelectMenu(item.title)} style={styles.menuItem}>
-        <Text style={styles.menuItemText}>{item.title}</Text>
-    </TouchableOpacity>
-  );
-
   function renderDatePicker() {
     return (
-        <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', width: '100%', padding: 12 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', width: '100%', padding: 20 }}>
             <TouchableOpacity
                 activeOpacity={.8}
                 onPress={showDatePicker}
@@ -170,7 +143,7 @@ const menuItems = [
   function renderSelectedTabItems() {
     let total = 0
     return (
-      <View style={{ height: '70%', alignSelf: 'center', width: '90%', padding: 10, borderWidth: 1.5, borderColor: COLORS.gray100, borderRadius: 8, backgroundColor: COLORS.gray200, elevation: 8, }}>
+      <View style={{ height: '70%', alignSelf: 'center', width: '90%', margin: 10, padding: 10, borderWidth: 1.5, borderColor: COLORS.gray100, borderRadius: 8, backgroundColor: COLORS.gray200, elevation: 8, }}>
         <TouchableOpacity>
         <Icon name="close" size={24} color="#000" style={{ alignSelf: 'flex-end'}} />
         </TouchableOpacity>
@@ -232,15 +205,6 @@ const menuItems = [
   
       }}>
       {/* <Text>CashTransaction</Text> */}
-      <View style={styles.header}>
-      <TouchableOpacity onPress={() =>       navigation.goBack()}>
-                <Icon name="arrow-back" size={30} color="#000" />
-      </TouchableOpacity>
-                <Text style={styles.headerText}>Cash Transaction</Text>
-                <TouchableOpacity onPress={toggleModal}>
-                    <Icon name="menu" size={30} color="#000" />
-                </TouchableOpacity>
-            </View>
       {renderDatePicker()}
       {show && (
                 <DateTimePicker
@@ -253,25 +217,6 @@ const menuItems = [
                 />
             )}
       {renderSelectedTabItems()}
-      <Modal
-                animationType="fade"
-                transparent={true}
-                visible={isModalVisible}
-                onRequestClose={toggleModal}
-            >
-            <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
-                <View style={styles.modalOverlay}>
-                    <View style={{ ...styles.modalContent, alignSelf: 'flex-end' }}>
-                        <FlatList
-                            data={menuItems}
-                            renderItem={renderMenuItem}
-                            keyExtractor={item => item.id}
-                        />
-                        <Text style={styles.versionText}>v1.03.14.24.02</Text>
-                    </View>
-                </View>
-            </TouchableWithoutFeedback>
-            </Modal>
       <View style={{ flex: 1, flexDirection: 'row', width: '100%', alignItems: 'center', justifyContent: 'center',}}>
         <TouchableOpacity 
           onPress={() => handleSelectedTab('disbursement')}

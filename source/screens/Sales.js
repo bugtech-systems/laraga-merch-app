@@ -45,7 +45,6 @@ const accounts = [
 const Sales = ({ navigation }) => {
   const [show, setShow] = useState(false);
   const [date, setDate] = useState(new Date());
-  const [isModalVisible, setModalVisible] = useState(false);
   
   const showDatePicker = () => {
     setShow(true);
@@ -57,22 +56,9 @@ const Sales = ({ navigation }) => {
     setDate(currentDate);
   };
 
-  const toggleModal = () => {
-    console.log('TAPPED OUTSIDE')
-    setModalVisible(!isModalVisible);
-  };
-
-  const handleSelectMenu = async (name) => {
-    toggleModal()
-    navigation.navigate(name, {})
-    console.log(name, "NAME")
-
-    return
-}
-
   function renderDatePicker() {
     return (
-        <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', width: '100%', paddingLeft: 12, paddingRight: 12 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', width: '100%', paddingLeft: 10, paddingRight: 10 }}>
             <TouchableOpacity
                 activeOpacity={.8}
                 onPress={showDatePicker}
@@ -198,48 +184,15 @@ const Sales = ({ navigation }) => {
     )
   }
   
-  const renderMenuItem = ({ item }) => (
-    <TouchableOpacity onPress={() => handleSelectMenu(item.title)} style={styles.menuItem}>
-        <Text style={styles.menuItemText}>{item.title}</Text>
-    </TouchableOpacity>
-);
-  
   return (
     <SafeAreaView
       style={{
         flex: 1,
-        backgroundColor: COLORS.gray400,
+        padding: 12,
+        backgroundColor: COLORS.lightGray1,
         justifyContent: 'flex-start',
       }}
     >
-    <Modal
-                animationType="fade"
-                transparent={true}
-                visible={isModalVisible}
-                onRequestClose={toggleModal}
-            >
-            <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>            
-                <View style={styles.modalOverlay}>
-                    <View style={{ ...styles.modalContent, alignSelf: 'flex-end' }}>
-                        <FlatList
-                            data={menuItems}
-                            renderItem={renderMenuItem}
-                            keyExtractor={item => item.id}
-                        />
-                        <Text style={styles.versionText}>v1.03.14.24.02</Text>
-                    </View>
-                </View>
-            </TouchableWithoutFeedback>
-            </Modal>
-      <View style={styles.header}>
-      <TouchableOpacity onPress={() =>       navigation.goBack()}>
-                <Icon name="arrow-back" size={30} color="#000" />
-      </TouchableOpacity>
-                <Text style={styles.headerText}>Sales</Text>
-                <TouchableOpacity onPress={toggleModal}>
-                    <Icon name="menu" size={30} color="#000" />
-                </TouchableOpacity>
-            </View>
       {renderDatePicker()}
       {show && (
                 <DateTimePicker

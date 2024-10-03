@@ -17,19 +17,8 @@ const Dashboard = ({navigation}) => {
 
   
     const [isCashModalVisible, setCashModalVisible] = useState(false);
-    const [isModalVisible, setModalVisible] = useState(false);
     const [transaction, setTransaction] = useState('');
 
-    const menuItems = [
-        { id: 1, title: 'Dashboard' },
-        { id: 2, title: 'Cash Transaction' },
-        { id: 3, title: 'Inventory' },
-        { id: 4, title: 'Purchases' },
-        { id: 5, title: 'User Form' },
-        { id: 6, title: 'Logout' },
-    ];
-    
-    
       // Function to handle dropdown open/close
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -45,29 +34,16 @@ const Dashboard = ({navigation}) => {
     closeDropdown()
   }
 
-    const toggleModal = () => {
-        console.log('TAPPED OUTSIDE')
-        setModalVisible(!isModalVisible);
-    };
+
     
     const toggleCashModal = () => {
         console.log('TAPPED OUTSIDE')
         setCashModalVisible(!isCashModalVisible);
     };
 
-    const handleSelectMenu = async (name) => {
-        toggleModal()
-        navigation.navigate(name, {})
-        console.log(name, "NAME")
 
-        return
-    }
 
-    const renderMenuItem = ({ item }) => (
-        <TouchableOpacity onPress={() => handleSelectMenu(item.title)} style={styles.menuItem}>
-            <Text style={styles.menuItemText}>{item.title}</Text>
-        </TouchableOpacity>
-    );
+
 
     const showDatePicker = () => {
         setShow(true);
@@ -123,36 +99,11 @@ const Dashboard = ({navigation}) => {
                 // alignItems: 'center',
                 // justifyContent: 'flex-start',
                 backgroundColor: COLORS.lightGray1,
-                // padding: 12
+                padding: 12
             }}
         >
-            <View style={styles.header}>
-                <Icon name="store" size={30} color="#000" />
-                <Text style={styles.headerText}>Admin (Palo Branch)</Text>
-                <TouchableOpacity onPress={toggleModal}>
-                    <Icon name="menu" size={30} color="#000" />
-                </TouchableOpacity>
-            </View>
 
-            <Modal
-                animationType="fade"
-                transparent={true}
-                visible={isModalVisible}
-                onRequestClose={toggleModal}
-            >
-            <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>            
-                <View style={styles.modalOverlay}>
-                    <View style={{ ...styles.modalContent, alignSelf: 'flex-end' }}>
-                        <FlatList
-                            data={menuItems}
-                            renderItem={renderMenuItem}
-                            keyExtractor={item => item.id}
-                        />
-                        <Text style={styles.versionText}>v1.03.14.24.02</Text>
-                    </View>
-                </View>
-            </TouchableWithoutFeedback>
-            </Modal>
+           
             <Modal
                 animationType="fade"
                 transparent={true}
@@ -340,12 +291,6 @@ const styles = StyleSheet.create({
     dateText: {
         fontSize: 16,
     },
-    modalOverlay: {
-        flex: 1,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
     modalCashContent: {
         width: '100%',
         backgroundColor: '#FFF',
@@ -356,33 +301,5 @@ const styles = StyleSheet.create({
         // bottom: '20%'
         // alignItems: 'center',
     },
-    modalContent: {
-        width: '50%',
-        backgroundColor: '#FFF',
-        borderRadius: 10,
-        padding: 10,
-        height: '50%',
-        // left: 30
-        bottom: '20%'
-        // alignItems: 'center',
-    },
-    menuItem: {
-        paddingVertical: 15,
-        borderBottomColor: '#ddd',
-        borderBottomWidth: 1,
-        textAlign: 'left',
-        alignItems: 'flex-start',
-        width: '100%',
-    },
-    menuItemText: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: '#000',
-        textAlign: 'center',
-    },
-    versionText: {
-        marginTop: 10,
-        color: '#888',
-        fontSize: 12,
-    },
+    
 })

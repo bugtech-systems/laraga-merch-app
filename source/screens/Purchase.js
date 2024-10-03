@@ -7,19 +7,11 @@ import { COLORS, icons } from '../constants';
 import moment from 'moment';
 
 
-const menuItems = [
-  { id: 1, title: 'Dashboard' },
-  { id: 2, title: 'Cash Transaction' },
-  { id: 3, title: 'Inventory' },
-  { id: 4, title: 'Purchases' },
-  { id: 5, title: 'Users' },
-  { id: 6, title: 'Logout' },
-];
+
 const Purchase = ({ navigation }) => {
   const [show, setShow] = useState(false);
   const [date, setDate] = useState(new Date());
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const [isModalVisible, setModalVisible] = useState(false);
 
     const [purchaseData, setPurchaseData] = useState([
         { id: 1, batch: 1, cans: 500, total: '5,000.00', avgAge: '6 days' },
@@ -34,24 +26,6 @@ const Purchase = ({ navigation }) => {
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
   };
-  
-  const toggleModal = () => {
-    console.log('TAPPED OUTSIDE')
-    setModalVisible(!isModalVisible);
-};
-
-  // Function to handle closing dropdown when pressing outside
-  const closeDropdown = () => {
-    setDropdownOpen(false);
-  };
-  
-  const handleSelectMenu = async (name) => {
-    toggleModal()
-    navigation.navigate(name, {})
-    console.log(name, "NAME")
-
-    return
-}
   
 const renderMenuItem = ({ item }) => (
   <TouchableOpacity onPress={() => handleSelectMenu(item.title)} style={styles.menuItem}>
@@ -146,32 +120,6 @@ const renderMenuItem = ({ item }) => (
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.header}>
-                <Icon name="arrow-back" size={30} onPress={() => navigation.goBack()} />
-                <Text style={styles.headerTitle}>Purchases</Text>
-                <TouchableOpacity onPress={() => toggleModal()}>
-                    <Icon name="menu" size={30} />
-                </TouchableOpacity>
-            </View>
-            <Modal
-                animationType="fade"
-                transparent={true}
-                visible={isModalVisible}
-                onRequestClose={toggleModal}
-            >
-            <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>            
-                <View style={styles.modalOverlay}>
-                    <View style={{ ...styles.modalContent, alignSelf: 'flex-end' }}>
-                        <FlatList
-                            data={menuItems}
-                            renderItem={renderMenuItem}
-                            keyExtractor={item => item.id}
-                        />
-                        <Text style={styles.versionText}>v1.03.14.24.02</Text>
-                    </View>
-                </View>
-            </TouchableWithoutFeedback>
-            </Modal>
             {renderDatePicker()}
             {show && (
                 <DateTimePicker
@@ -196,56 +144,10 @@ const renderMenuItem = ({ item }) => (
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f2f2f2',
+        padding: 12,
+        backgroundColor: COLORS.lightGray1,
     },
-    header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: 15,
-        backgroundColor: '#fff',
-        elevation: 3,
-    },
-    headerTitle: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: '#333',
-    },
-    modalOverlay: {
-      flex: 1,
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      justifyContent: 'center',
-      alignItems: 'center',
-  },
-  modalContent: {
-    width: '50%',
-    backgroundColor: '#FFF',
-    borderRadius: 10,
-    padding: 10,
-    height: '50%',
-    // left: 30
-    bottom: '20%'
-    // alignItems: 'center',
-},
-menuItem: {
-    paddingVertical: 15,
-    borderBottomColor: '#ddd',
-    borderBottomWidth: 1,
-    textAlign: 'left',
-    alignItems: 'flex-start',
-    width: '100%',
-},
-menuItemText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#000',
-    textAlign: 'center',
-},
-versionText: {
-    marginTop: 10,
-    color: '#888',
-    fontSize: 12,
-},
+    
     purchaseList: {
         padding: 15,
     },

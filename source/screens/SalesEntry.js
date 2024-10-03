@@ -5,14 +5,6 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import moment from 'moment';
 
-const menuItems = [
-  { id: 1, title: 'Dashboard' },
-  { id: 2, title: 'Cash Transaction' },
-  { id: 3, title: 'Inventory' },
-  { id: 4, title: 'Purchases' },
-  { id: 5, title: 'Users' },
-  { id: 6, title: 'Logout' },
-];
 
 const paymentStatus = [
   {
@@ -56,7 +48,6 @@ const accounts = [
 const SalesEntry = ({ navigation }) => {
   const [show, setShow] = useState(false);
   const [date, setDate] = useState(new Date());
-  const [isModalVisible, setModalVisible] = useState(false);
   const [peddler, setPeddler] = useState('');
   const [paymentVal, setPaymentVal] = useState('');
   // const [paymentStatus, setPaymentStatus] = useState('');
@@ -76,18 +67,6 @@ const SalesEntry = ({ navigation }) => {
     setDate(currentDate);
   };
 
-  const toggleModal = () => {
-    console.log('TAPPED OUTSIDE')
-    setModalVisible(!isModalVisible);
-  };
-
-  const handleSelectMenu = async (name) => {
-    toggleModal()
-    navigation.navigate(name, {})
-    console.log(name, "NAME")
-
-    return
-  }
   
   const handlePeddler = (val) => {
     if (val == 'Add new +') {
@@ -249,11 +228,6 @@ const SalesEntry = ({ navigation }) => {
     )
   }
 
-  const renderMenuItem = ({ item }) => (
-    <TouchableOpacity onPress={() => handleSelectMenu(item.title)} style={styles.menuItem}>
-      <Text style={styles.menuItemText}>{item.title}</Text>
-    </TouchableOpacity>
-  );
 
   return (
     <SafeAreaView
@@ -263,34 +237,6 @@ const SalesEntry = ({ navigation }) => {
         justifyContent: 'flex-start',
       }}
     >
-    <Modal
-                animationType="fade"
-                transparent={true}
-                visible={isModalVisible}
-                onRequestClose={toggleModal}
-            >
-            <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>            
-                <View style={styles.modalOverlay}>
-                    <View style={{ ...styles.modalContent, alignSelf: 'flex-end' }}>
-                        <FlatList
-                            data={menuItems}
-                            renderItem={renderMenuItem}
-                            keyExtractor={item => item.id}
-                        />
-                        <Text style={styles.versionText}>v1.03.14.24.02</Text>
-                    </View>
-                </View>
-            </TouchableWithoutFeedback>
-            </Modal>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon name="arrow-back" size={30} color="#000" />
-        </TouchableOpacity>
-        <Text style={styles.headerText}>New Sale</Text>
-        <TouchableOpacity onPress={toggleModal}>
-          <Icon name="menu" size={30} color="#000" />
-        </TouchableOpacity>
-      </View>
       <View style={{ padding: 16, backgroundColor: COLORS.white, height: '90%', margin: 10, borderRadius: 22, flexDirection: 'column', alignItems: 'flex-start' }}>
         <View style={{ alignItems: 'flex-end', width: '100%' }}>
           <Icon onPress={() => navigation.goBack()} name="close" size={26} color="#000" />

@@ -7,24 +7,11 @@ import { COLORS } from '../constants';
 
 
 const InventoryEntry = ({ navigation }) => {
-  const [isModalVisible, setModalVisible] = useState(false);
-  
-  const toggleModal = () => {
-    console.log('TAPPED OUTSIDE')
-    setModalVisible(!isModalVisible);
-};
-  
   
   
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.headerContainer}>
-                <Icon onPress={() => navigation.goBack()} name="arrow-back" size={30} color="#000" />
-                <Text style={styles.headerText}>New Inventory Entry</Text>
-                <TouchableOpacity onPress={toggleModal}>
-                    <Icon name="menu" size={30} color="#000" />
-                </TouchableOpacity>
-            </View>
+      
 
       <View style={{...styles.formContainer}}>
         <TouchableOpacity style={styles.closeButton}>
@@ -79,7 +66,7 @@ const InventoryEntry = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    height: '100%', borderWidth: 1,
+    height: '100%',
     backgroundColor: COLORS.lightGray1,
     justifyContent: 'space-between',
     
