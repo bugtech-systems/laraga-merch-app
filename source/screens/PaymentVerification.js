@@ -94,14 +94,13 @@ const [show, setShow] = useState(false);
 
 
   const menuItems = [
-      { id: 1, title: 'Dashboard' },
-      { id: 2, title: 'Cash Transaction' },
-      { id: 3, title: 'Inventory Entries' },
-      { id: 4, title: 'Payments Verification' },
-      { id: 5, title: 'Summary Report' },
-      { id: 6, title: 'Users' },
-      { id: 7, title: 'Logout' },
-  ];
+    { id: 1, title: 'Dashboard' },
+    { id: 2, title: 'Cash Transaction' },
+    { id: 3, title: 'Inventory' },
+    { id: 4, title: 'Purchases' },
+    { id: 5, title: 'Users' },
+    { id: 6, title: 'Logout' },
+];
   // Toggle select/unselect all
   const toggleSelectAll = () => {
     if (selectedItems.length === paymentVerificationData.length) {

@@ -8,10 +8,10 @@ const DashboardCard = ({ title, stats, onPress, onPressCard }) => {
   return (
     <TouchableOpacity onPress={() => onPressCard()} style={styles.card}>
       <View style={styles.cardHeader}>
-        <Text style={styles.cardTitle}>{title}</Text>
-        {(title === 'CASH' && onPress) && (
+        <Text style={styles.cardTitle}>{title + ':' + ' ' } {300}</Text>
+        {(title && onPress) && (
           <TouchableOpacity onPress={onPress}>
-            <Icon name="add-circle-outline" size={24} color="#000" />
+            <Icon name="add" size={20} color='#06416c' />
           </TouchableOpacity>
         )}
       </View>
@@ -60,7 +60,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   statText: {
-    fontSize: 12,
+    fontSize: 16,
+    textAlign: 'center',
+    fontWeight: '400',
     // color: '#888',
     // borderWidth: 1,
     // width: '30%'
@@ -68,7 +70,8 @@ const styles = StyleSheet.create({
     
   },
   statValue: {
-    fontSize: 16,
+    fontSize: 14,
+    textAlign: 'center',
     fontWeight: 'bold',
     color: COLORS.black,
 

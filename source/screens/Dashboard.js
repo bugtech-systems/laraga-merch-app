@@ -23,11 +23,10 @@ const Dashboard = ({navigation}) => {
     const menuItems = [
         { id: 1, title: 'Dashboard' },
         { id: 2, title: 'Cash Transaction' },
-        { id: 3, title: 'Inventory Entries' },
-        { id: 4, title: 'Payments Verification' },
-        { id: 5, title: 'Summary Report' },
-        { id: 6, title: 'Users' },
-        { id: 7, title: 'Logout' },
+        { id: 3, title: 'Inventory' },
+        { id: 4, title: 'Purchases' },
+        { id: 5, title: 'Users' },
+        { id: 6, title: 'Logout' },
     ];
     
     
@@ -91,7 +90,7 @@ const Dashboard = ({navigation}) => {
                 <TouchableOpacity
                     activeOpacity={.8}
                     onPress={showDatePicker}
-                    style={{ width: '85%', borderWidth: 1.5, borderColor: COLORS.gray200, borderRadius: 8, backgroundColor: COLORS.gray200, elevation: 8 }}
+                    style={{ width: '100%', borderWidth: 1.5, borderColor: COLORS.gray200, borderRadius: 8, backgroundColor: COLORS.gray200, elevation: 8 }}
                 >
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderRadius: 8, width: '100%', padding: 5 }}>
                         <Text style={{ paddingLeft: 4, fontSize: 20, color: COLORS.black, fontWeight: '500' }}>{date == undefined || '' ? '' : moment(date).format('MM/DD/YYYY')}</Text>
@@ -102,7 +101,7 @@ const Dashboard = ({navigation}) => {
 
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center' }}
+                {/* <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center' }}
                     onPress={() => console.log('Pressed Printer!')}>
                     <View style={{ padding: 10, alignItems: 'center', borderWidth: 1, justifyContent: 'center', backgroundColor: '#0a5388', borderColor: '#0a5388', borderRadius: 10, width: '100%' }}>
                         <Image
@@ -110,7 +109,7 @@ const Dashboard = ({navigation}) => {
                             style={{ height: 30, width: 30, tintColor: COLORS.white, }}
                         />
                     </View>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
             </View>
         )
     }
@@ -123,7 +122,7 @@ const Dashboard = ({navigation}) => {
                 flex: 1,
                 // alignItems: 'center',
                 // justifyContent: 'flex-start',
-                backgroundColor: COLORS.gray400,
+                backgroundColor: COLORS.lightGray1,
                 // padding: 12
             }}
         >
@@ -260,25 +259,25 @@ const Dashboard = ({navigation}) => {
             )}
             <View style={{ flex: 1, flexDirection: 'column', padding: 12 }}>
                 <DashboardCard
-                    title="CASH"
+                    title="SALES"
                     stats={[
                         { label: 'SALES', value: '10,900.00' },
                         { label: 'DISBURSED', value: '900.00' },
                         { label: 'A/R', value: '3,000.00' },
                         { label: 'ON-HAND', value: '7,000.00' },
                     ]}
-                    onPress={() => setCashModalVisible(true)}
+                    onPress={() => setCashModalVisible(true)} // Transaction Entry
                     onPressCard={() => navigation.navigate('Cash Transaction')}
                 />
 
                 {/* Sales Card */}
                 <DashboardCard
-                    title="SALES"
+                    title="CAN SOLD"
                     stats={[
                         { label: 'NEW', value: '6,500.00' },
                         { label: 'REFILL', value: '4,400.00' },
                     ]}
-                    onPress={() => navigation.navigate('Sales')}
+                    onPress={() => navigation.navigate('Sales Entry')}
                     onPressCard={() => navigation.navigate('Sales')}
 
                 />
@@ -287,16 +286,16 @@ const Dashboard = ({navigation}) => {
                 <DashboardCard
                     title="INVENTORY"
                     stats={[
-                        { label: 'OUT', value: '100' },
-                        { label: 'EMPTY', value: '200' },
+                        { label: 'NEW CANS', value: '100' },
+                        { label: 'REFILL', value: '200' },
                         { label: 'B.O.', value: '50' },
-                        { label: 'STOCKS', value: '150' },
                     ]}
+                    onPress={() => navigation.navigate('Inventory Entry')}
                     onPressCard={() => navigation.navigate('Inventory')}
                 />
 
                 {/* Purchases Card */}
-                <DashboardCard
+               {/*  <DashboardCard
                     title="PURCHASES"
                     stats={[
                         { label: 'BATCH', value: '1' },
@@ -305,7 +304,7 @@ const Dashboard = ({navigation}) => {
                         { label: 'AVE. AGE', value: '4' },
                     ]}
                     onPressCard={() => navigation.navigate('Purchase')}
-                />
+                /> */}
             </View>
         </SafeAreaView>
     )

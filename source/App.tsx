@@ -14,11 +14,12 @@ import { COLORS, icons } from './constants';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Image } from 'react-native';
 import Dashboard from './screens/Dashboard';
-import InventoryEntries from './screens/InventoryEntries';
 import PaymentVerification from './screens/PaymentVerification';
 import Sales from './screens/Sales';
 import Inventory from './screens/Inventory';
 import Purchase from './screens/Purchase';
+import SalesEntry from './screens/SalesEntry';
+import InventoryEntry from './screens/InventoryEntry';
 
 
 // If you're getting this app code by cloning the repository at
@@ -134,11 +135,11 @@ export const App = () => {
 				})}
             />
             <Stack.Screen
-              name="Inventory Entries"
-              component={InventoryEntries}
+              name="Inventory Entry"
+              component={InventoryEntry}
 				options={({ navigation }) => ({
           headerShown: false,
-					title: 'Inventory Entries',
+					title: 'Inventory Entry',
 					headerTitleStyle: { color: COLORS.black, fontWeight: 'bold' },
 					// headerStyle: { backgroundColor: COLORS.secondary },
 					headerStyle: { backgroundColor: '#fffff1', elevation: 6, borderBottomWidth: 1, shadowOpacity: .5, shadowColor: COLORS.black },
@@ -159,32 +160,7 @@ export const App = () => {
 						headerRight: () => (customDrawerIcon())
 				})}
             />
-             <Stack.Screen
-              name="Payments Verification"
-              component={PaymentVerification}
-				options={({ navigation }) => ({
-          headerShown: false,
-					title: 'Inventory Entries',
-					headerTitleStyle: { color: COLORS.black, fontWeight: 'bold' },
-					// headerStyle: { backgroundColor: COLORS.secondary },
-					headerStyle: { backgroundColor: '#fffff1', elevation: 6, borderBottomWidth: 1, shadowOpacity: .5, shadowColor: COLORS.black },
-
-					headerLeft: () => (
-						<TouchableOpacity
-							onPress={() => navigation.goBack()}
-							style={{ padding: 10, alignItems: 'center', justifyContent: 'center' }}
-						>
-							<Image
-								source={icons.back}
-								style={{
-									height: 20,
-									width: 20,
-									tintColor: COLORS.black
-								}} />
-						</TouchableOpacity>),
-						headerRight: () => (customDrawerIcon())
-				})}
-            />
+            
             <Stack.Screen
               name="Sales"
               component={Sales}
@@ -238,11 +214,11 @@ export const App = () => {
 				})}
             />
                         <Stack.Screen
-              name="Purchase"
+              name="Purchases"
               component={Purchase}
 				options={({ navigation }) => ({
           headerShown: false,
-					title: 'Purchase',
+					title: 'Purchases',
 					headerTitleStyle: { color: COLORS.black, fontWeight: 'bold' },
 					// headerStyle: { backgroundColor: COLORS.secondary },
 					headerStyle: { backgroundColor: '#fffff1', elevation: 6, borderBottomWidth: 1, shadowOpacity: .5, shadowColor: COLORS.black },
@@ -263,6 +239,33 @@ export const App = () => {
 						headerRight: () => (customDrawerIcon())
 				})}
             />
+            <Stack.Screen
+              name="Sales Entry"
+              component={SalesEntry}
+				options={({ navigation }) => ({
+          headerShown: false,
+					title: 'Sales Entry',
+					headerTitleStyle: { color: COLORS.black, fontWeight: 'bold' },
+					// headerStyle: { backgroundColor: COLORS.secondary },
+					headerStyle: { backgroundColor: '#fffff1', elevation: 6, borderBottomWidth: 1, shadowOpacity: .5, shadowColor: COLORS.black },
+
+					headerLeft: () => (
+						<TouchableOpacity
+							onPress={() => navigation.goBack()}
+							style={{ padding: 10, alignItems: 'center', justifyContent: 'center' }}
+						>
+							<Image
+								source={icons.back}
+								style={{
+									height: 20,
+									width: 20,
+									tintColor: COLORS.black
+								}} />
+						</TouchableOpacity>),
+						headerRight: () => (customDrawerIcon())
+				})}
+            />
+            
             <Stack.Screen
               name="Your To-Do List"
               component={ItemListView}
