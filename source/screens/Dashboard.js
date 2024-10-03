@@ -25,7 +25,7 @@ const Dashboard = ({navigation}) => {
         { id: 2, title: 'Cash Transaction' },
         { id: 3, title: 'Inventory' },
         { id: 4, title: 'Purchases' },
-        { id: 5, title: 'Users' },
+        { id: 5, title: 'User Form' },
         { id: 6, title: 'Logout' },
     ];
     
@@ -261,10 +261,10 @@ const Dashboard = ({navigation}) => {
                 <DashboardCard
                     title="SALES"
                     stats={[
-                        { label: 'SALES', value: '10,900.00' },
-                        { label: 'DISBURSED', value: '900.00' },
-                        { label: 'A/R', value: '3,000.00' },
-                        { label: 'ON-HAND', value: '7,000.00' },
+                        // { label: 'SALES', value: '10,900.00' },
+                        { label: 'CASH', value: '900.00' },
+                        { label: 'RECEIVABLES', value: '3,000.00' },
+                        { label: 'EXPENSES', value: '7,000.00' },
                     ]}
                     onPress={() => setCashModalVisible(true)} // Transaction Entry
                     onPressCard={() => navigation.navigate('Cash Transaction')}

@@ -20,6 +20,7 @@ import Inventory from './screens/Inventory';
 import Purchase from './screens/Purchase';
 import SalesEntry from './screens/SalesEntry';
 import InventoryEntry from './screens/InventoryEntry';
+import UserForm from './screens/UserForm';
 
 
 // If you're getting this app code by cloning the repository at
@@ -160,7 +161,32 @@ export const App = () => {
 						headerRight: () => (customDrawerIcon())
 				})}
             />
-            
+            <Stack.Screen
+              name="User Form"
+              component={UserForm}
+				options={({ navigation }) => ({
+          headerShown: false,
+					title: 'User Form',
+					headerTitleStyle: { color: COLORS.black, fontWeight: 'bold' },
+					// headerStyle: { backgroundColor: COLORS.secondary },
+					headerStyle: { backgroundColor: '#fffff1', elevation: 6, borderBottomWidth: 1, shadowOpacity: .5, shadowColor: COLORS.black },
+
+					headerLeft: () => (
+						<TouchableOpacity
+							onPress={() => navigation.goBack()}
+							style={{ padding: 10, alignItems: 'center', justifyContent: 'center' }}
+						>
+							<Image
+								source={icons.back}
+								style={{
+									height: 20,
+									width: 20,
+									tintColor: COLORS.black
+								}} />
+						</TouchableOpacity>),
+						headerRight: () => (customDrawerIcon())
+				})}
+            />
             <Stack.Screen
               name="Sales"
               component={Sales}
